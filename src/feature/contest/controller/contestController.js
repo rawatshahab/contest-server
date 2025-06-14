@@ -13,17 +13,17 @@ module.exports.getAllContestController = async (req,res,next) =>{
             fetchLeetcodeContestsAndUserData(usernamel),
             fetchCodeChefsContestAndUserData(username,page),
             fetchCodeForcesContestAndUserData(username,page),
-        ])                                        
+        ])                                                                                                                                                                                                                                                                                                                                                                                    
        sendSuccessResponse({
-        res,
-        statusCode:200,
-        data:{
-            dashboard:{
-               leetcode,codechefs,codeforces
-            }
-        }
-       })
-    }catch(err){
-        next(err);
-    }
-}
+        res,                                                                                        
+        statusCode:200,  
+        data:{           
+            dashboard:{       
+               leetcode,codechefs,codeforces        
+            }     
+        }         
+       })     
+    }catch(err){    
+        next(err);  
+    }  
+}                                                                
