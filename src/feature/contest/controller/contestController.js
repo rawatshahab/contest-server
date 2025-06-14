@@ -1,17 +1,18 @@
 const {
   fetchLeetcodeContestsAndUserData,
-  fetchCodeChefsContestAndUserData,
+  fetchCodeChefContests,
   fetchCodeForcesContestAndUserData
-} = require("../services/contestdetails.services");
+} = require("../../../services/contest.services");
+const {syncDatabase} = require("../services/contestdetails.services");
 const {sendSuccessResponse} = require("../../../utils/success.response");
 module.exports.getAllContestController = async (req,res,next) =>{
     try{
         const usernamel = "_rawat";
-        const username = "";
+        const username = "mayankrawat";
         const page = 6;
-        const [leetcode, codechefs, codeforces] = await Promise.allSettled([
+        const [leetcode,codechefs ,codeforces] = await Promise.allSettled([
             fetchLeetcodeContestsAndUserData(usernamel),
-            fetchCodeChefsContestAndUserData(username,page),
+            fetchCodeChefContests(),
             fetchCodeForcesContestAndUserData(username,page),
         ])                                                                                                                                                                                                                                                                                                                                                                                    
        sendSuccessResponse({
@@ -19,11 +20,26 @@ module.exports.getAllContestController = async (req,res,next) =>{
         statusCode:200,  
         data:{           
             dashboard:{       
-               leetcode,codechefs,codeforces        
+               leetcode,codeforces,codechefs       
             }     
         }         
        })     
     }catch(err){    
         next(err);  
     }  
-}                                                                
+} 
+module.exports.saveToDbController = async (req,res,next) =>{
+    try{
+        const usernamel = "_rawat";
+        const username = "mayankrawat";
+        const page = 6;
+        await syncDatabase(usernamel);                                                                                                                                                                                                                                                                                                                                                                               
+       sendSuccessResponse({
+        res,                                                                                        
+        statusCode:200,  
+        data:null,        
+       })     
+    }catch(err){    
+        next(err);  
+    }  
+}                                                                 
