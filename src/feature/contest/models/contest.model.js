@@ -25,6 +25,6 @@ const contestSchema = mongoose.Schema({
     required: true,
   },
 });
-
+contestSchema.index({ platform: 1, contestType: 1, startTime: -1 });
 const Contest = mongoose.model("Contest", contestSchema);
 module.exports = Contest;
