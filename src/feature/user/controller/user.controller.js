@@ -8,7 +8,7 @@ const {sendSuccessResponse} = require("../../../utils/success.response");
 module.exports.getAllContestController = async (req,res,next) =>{
     try{
         const usernamel = "_rawat";
-        const username = "mayankrawat";
+        const username = "Um_nik";
         const page = 6;
         const [leetcode,codechefs ,codeforces] = await Promise.allSettled([
             fetchLeetcodeContestsAndUserData(usernamel),
@@ -30,10 +30,10 @@ module.exports.getAllContestController = async (req,res,next) =>{
 } 
 module.exports.saveToDbController = async (req,res,next) =>{
     try{
-        const usernamel = "_rawat";
-        const username = "mayankrawat";
+        const leetcodeID = "_rawat";
+        const codeforcesID = "Um_nik";
         const page = 6;
-        await syncDatabase(usernamel);                                                                                                                                                                                                                                                                                                                                                                               
+        await syncDatabase(leetcodeID,codeforcesID);                                                                                                                                                                                                                                                                                                                                                                               
        sendSuccessResponse({
         res,                                                                                        
         statusCode:200,  

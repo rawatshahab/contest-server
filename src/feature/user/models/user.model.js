@@ -7,8 +7,8 @@ const leetSchema = mongoose.Schema({
       problemSolved: Number,
       totalProblems: Number,
       rating: Number,
-      name: String,
-      date: Date,
+      title: String,
+      startTime: Number,
       duration: String,
     },
   ],
@@ -26,19 +26,29 @@ const leetSchema = mongoose.Schema({
   },
 });
 const codeforcesSchema = mongoose.Schema({
-  pastContests: {
-    problemSolved: Number,
-    totalProblems: Number,
-    rating: Number,
-    name: String,
-    date: Date,
-    duration: String,
-  },
-  upcomingContest: {
-    title: String,
-    startTime: Number,
-    duration: Number,
-  },
+  userId: { type: String, required: true, unique: true },
+  pastContests: [
+    {
+      contestId: Number,
+      contestType: String,
+      problemSolved: Number,
+      totalProblems: Number,
+      rating: Number,
+      title: String,
+      startTimeInSeconds: Number,
+      relativeTimeInSeconds: Number,
+      duration: Number,
+    },
+  ],
+  upcomingContests: [
+    {
+      title: String,
+      contestType: String,
+      startTimeInSeconds: Number,
+      relativeTimeInSeconds: Number,
+      duration: Number,
+    },
+  ],
   userStats: {
     totalQuestionSolved: Number,
     platformRating: Number,
@@ -48,4 +58,5 @@ const codeforcesSchema = mongoose.Schema({
 });
 
 const leetcodeDB = mongoose.model("leetcode", leetSchema);
-module.exports = leetcodeDB;
+const codeforcesDB = mongoose.model("codeforces", codeforcesSchema);
+module.exports = { leetcodeDB, codeforcesDB };

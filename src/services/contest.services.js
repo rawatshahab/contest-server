@@ -135,19 +135,38 @@ module.exports.fetchCodeForcesContestAndUserData = async (username, page = 10) =
     const ratingPromise = username
       ? axios.get(`https://codeforces.com/api/user.rating?handle=${username}`)
       : Promise.resolve({ data: { result: [] } });
-
-    const [contestRes, profileRes, ratingRes] = await Promise.all([
+    const questionSolved = username
+    ? axios.get(`https://codeforces.com/api/user.status?handle=${username}`)
+      : Promise.resolve({data:{result: []}});
+    const [contestRes, profileRes, ratingRes, questionRes] = await Promise.all([
       contestPromise,
       profilePromise,
-      ratingPromise
+      ratingPromise,
+      questionSolved,
     ]);
 
     const allContests = contestRes.data.result;
+    const submissions = questionRes.data.result;
+    const solvedSet = new Set();
+
+
+  submissions.forEach(sub => {
+    if (sub.verdict === "OK" && sub.problem) {
+      // total
+      solvedSet.add(sub.problem.contestId + "_" + sub.problem.index);
+      // contest-specific
+      // if (contestId && sub.problem.contestId === contestId) {
+      //   contestSolvedSet.add(sub.problem.index);
+      // }
+    }
+  });
     return {
       upcomingContests: allContests.filter(c => c.phase === "BEFORE"),
       pastContests: allContests.filter(c => c.phase === "FINISHED").slice(0, page),
       userProfile: profileRes.data.result[0] || null,
       userRating: ratingRes.data.result || [],
+      totalSolved: solvedSet.size,
+
     };
   } catch (err) {
     console.error("Codeforces Error:", err.message);
