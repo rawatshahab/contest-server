@@ -1,10 +1,22 @@
 const express = require('express');
 const cors = require('cors');
+const session  = require('express-session');
+const MongoStore = require("connect-mongo")(session);
 const app = express();
 const {mountRoutes} = require("../src/routes/index");
 app.use(cors());
 app.use(express.json());
-
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  cookie: {
+    secure: process.env.NODE_ENV === "production", // only over HTTPS
+    httpOnly: true,    // JS can’t read it
+    maxAge: 1000 * 60 * 60 * 24 * 365 * 10  // e.g. 10 years
+  }
+}));
 mountRoutes(app);
 app.use((err, req, res, next) => {
     console.error('Global Error Handler:', err);

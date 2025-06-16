@@ -1,21 +1,7 @@
 const axios = require("axios");
 module.exports.fetchLeetcodeContestsAndUserData = async (username) => {
   try {
-
-    const contestQuery = {
-      query: `
-        query {
-          allContests {
-            title
-            titleSlug
-            startTime
-            duration
-          }
-        }
-      `
-    };
-
-    const userHistoryQuery = username ? {
+   const userHistoryQuery = username ? {
       query: `
         query userContestRankingInfo($username: String!) {
   userContestRanking(username: $username) {
