@@ -168,3 +168,55 @@ module.exports.syncDatabase = async () => {
     console.log(err);
   }
 };
+
+module.exports.verifyLeetCode = async(username) =>{
+  try{}
+  catch(err){
+    console.log(err);
+  }
+  const query = {
+    query: `
+      query matchedUser($username: String!) {
+        matchedUser(username: $username) {
+          username
+        }
+      }
+    `,
+    variables: { username }
+  };
+  try {
+    const { data } = await axios.post(
+      'https://leetcode.com/graphql',
+      query,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    return Boolean(data.data.matchedUser);
+  } catch (err) {
+    // network or GraphQL error
+    return false;
+  }
+}
+module.exports.verifyCodeforces= async(handle)=> {
+  try {
+    const res = await axios.get(
+      `https://codeforces.com/api/user.info?handles=${encodeURIComponent(handle)}`
+    );
+    return res.data.status === 'OK' && res.data.result.length > 0;
+  } catch (err) {
+    // 400 or other error if handle doesn’t exist
+    return false;
+  }
+};
+module.exports.verifyCodechef = async(handle) => {
+  try {
+    // HEAD is a bit lighter than GET
+    await axios.head(`https://www.codechef.com/users/${encodeURIComponent(handle)}`);
+    return true;    // 200 OK
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      return false; // not found
+    }
+    // other network errors, treat as “invalid” or retry
+    return false;
+  }
+}

@@ -30,10 +30,8 @@ module.exports.getAllContestController = async (req,res,next) =>{
 } 
 module.exports.saveToDbController = async (req,res,next) =>{
     try{
-        const leetcodeID = "_rawat";
-        const codeforcesID = "Um_nik";
-        const page = 6;
-        await syncDatabase(leetcodeID,codeforcesID);                                                                                                                                                                                                                                                                                                                                                                               
+        const { leetcode, codeforces, codechef } = req.session.userHandles || {};
+        await syncDatabase(leetcode,codeforces,codechef);                                                                                                                                                                                                                                                                                                                                                                               
        sendSuccessResponse({
         res,                                                                                        
         statusCode:200,  
